@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+</head>
+<body>
+
+<script>
+
+class Student {
+
+    constructor(id, name, grades, attendance) {
+        this.id = id;
+        this.name = name;
+        this.grades = grades;
+        this.attendance = attendance;
+    }
+
+    calculateAverage() {
+        let total = this.grades.reduce((sum, grade) => sum + grade, 0);
+        return total / this.grades.length;
+    }
+
+    calculateGrade(average) {
+
+        if (average >= 90) {
+            return "A";
+        } else if (average >= 80) {
+            return "B";
+        } else if (average >= 70) {
+            return "C";
+        } else if (average >= 60) {
+            return "D";
+        } else if (average >= 50) {
+            return "E";
+        } else {
+            return "F";
+        }
+    }
+
+    calculateResult() {
+
+        let average = this.calculateAverage();
+
+        if (average >= 50 && this.attendance >= 75) {
+            return "ناجح";
+        } else {
+            return "يحتاج مراجعة";
+        }
+    }
+}
+
+let studentsList = [
+
+    new Student(101, "شهندة", [90, 85, 95], 90),
+
+    new Student(102, "محمد", [45, 48, 42], 80),
+
+    new Student(103, "كريمان", [70, 75, 80], 85),
+
+    new Student(104, "زهراء", [40, 45, 48], 70)
+
+];
+
+let strugglingStudents = studentsList.filter(student => {
+
+    let average = student.calculateAverage();
+
+    return average >= 40 && average <= 49;
+
+});
+
+let mercyStudents = strugglingStudents.map(student => {
+
+    let oldAverage = student.calculateAverage();
+
+    let newAverage = oldAverage + 5;
+
+    return {
+        id: student.id,
+        name: student.name,
+        oldAverage: oldAverage,
+        newAverage: newAverage
+    };
+
+});
+
+let totalNewAverages = mercyStudents.reduce((sum, student) => {
+
+    return sum + student.newAverage;
+
+}, 0);
+
+let mercyAverage = mercyStudents.length > 0
+    ? totalNewAverages / mercyStudents.length
+    : 0;
+
+console.log("===== تقرير الطلاب =====");
+
+studentsList.forEach(student => {
+
+    let average = student.calculateAverage();
+
+    let grade = student.calculateGrade(average);
+
+    let result = student.calculateResult();
+
+    console.log("----------------------");
+
+    console.log("رقم الجلوس:", student.id);
+
+    console.log("اسم الطالب:", student.name);
+
+    console.log("المتوسط:", average.toFixed(2));
+
+    console.log("التقدير:", grade);
+
+    console.log("النتيجة:", result);
+
+});
+
+console.log("===== الطلاب المستحقون للرأفة =====");
+
+console.log(mercyStudents);
+
+console.log("===== متوسط الرأفة =====");
+
+console.log(mercyAverage.toFixed(2));
+
+</script>
+
+</body>
+</html>
